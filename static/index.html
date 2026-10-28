@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>手勢映畫 · Gesture Gallery</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header><a class="brand" href="/">◈ 手勢映畫</a><span>GESTURE GALLERY / 01</span></header>
+  <main>
+    <div class="intro"><p class="eyebrow">A LITTLE MOVEMENT. A NEW PERSPECTIVE.</p><h1>揮揮手，換個風景。</h1><p>讓手勢接手播放，把目光留給喜歡的畫面。</p></div>
+    <div class="workspace">
+      <section class="panel camera-panel" aria-label="攝影機與手勢偵測">
+        <div class="panel-heading"><h2><span class="dot"></span>手勢感應區</h2><span id="cameraBadge">尚未啟動</span></div>
+        <div class="camera-frame"><video id="video" autoplay muted playsinline></video><canvas id="overlay"></canvas><div id="cameraPlaceholder"><span class="camera-icon">◎</span><h3>讓你的手成為遙控器</h3><p>開啟攝影機，將一隻手放進畫面</p></div></div>
+        <div class="camera-actions"><button id="startCamera" class="primary">開啟攝影機</button><button id="stopCamera" disabled>停止偵測</button></div>
+        <p id="status" role="status" aria-live="polite">圖片與手勢辨識均在你的瀏覽器中處理。</p>
+        <p id="clapStatus" class="hint" role="status" aria-live="polite">拍手：開啟攝影機後，先讓雙手張開並分開。</p>
+        <p id="zoomStatus" class="hint">縮放：只伸出同一手的食指與中指，調整兩指間距；移出畫面恢復大小。</p>
+        <p id="gunStatus" class="hint">開槍：食指伸直、其餘三指收起，拇指張開成 L 形後壓下。</p>
+        <p class="hint">👌 謝幕：拇指與食指圈合，其餘三指伸出，保持約半秒；布幕會合攏後自動拉開。</p>
+        <div class="gesture-grid"><div><b>← 手掌左移</b><span>上一張</span></div><div><b>手掌右移 →</b><span>下一張</span></div><div><b>☝ 只伸食指</b><span>第一張</span></div><div><b>只伸小指</b><span>最後一張</span></div></div>
+        <p class="hint">以鏡像預覽中的方向為準。手勢穩定後觸發，每次切換間隔約 1 秒。支援雙手：張開任一手，手心／手背翻轉可讓圖片左右翻轉，再翻一次恢復。</p>
+        <p class="hint">握拳：上下翻轉；👍：向上跳；👎：下蹲。手勢保持約半秒，放開後可再觸發。雙手張開後拍合，每次依序切換：灰階 → 半透明 → 原圖，兩次拍手間隔至少約 1 秒。</p>
+      </section>
+      <section class="panel gallery-panel" aria-label="圖片展示">
+        <div class="panel-heading"><h2>風景收藏</h2><label class="upload" for="imageUpload">＋ 載入圖片</label><input id="imageUpload" type="file" accept="image/*" multiple hidden></div>
+        <div class="photo-frame"><div id="slideMotion"><div id="slideZoom"><img id="slide" alt=""><div id="shotMarks" aria-hidden="true"></div></div></div><span id="photoTag">YOUR MOMENT, IN FOCUS</span><div id="curtain" hidden aria-hidden="true"><div class="curtain-panel curtain-left"></div><div class="curtain-panel curtain-right"></div><div class="curtain-message"><span>THANK YOU FOR WATCHING</span><strong>謝謝觀賞</strong><span>每一個手勢，都是精彩的演出。</span></div></div></div>
+        <div class="caption"><div><p id="slideCategory" class="eyebrow">THE COLLECTION</p><h2 id="slideTitle"></h2></div><span id="counter" aria-live="polite"></span></div>
+        <div class="controls" aria-label="圖片控制"><button id="first" title="第一張">⇤ 第一張</button><button id="previous" aria-label="上一張">←</button><div id="dots" aria-label="選擇圖片"></div><button id="next" aria-label="下一張">→</button><button id="last" title="最後一張">最後一張 ⇥</button></div>
+        <p class="hint">也可使用鍵盤 ← →、Home、End。載入的圖片只保留在本次瀏覽中。</p>
+      </section>
+    </div>
+    <footer><span>用手勢探索，讓畫面說話。</span><span>MEDIAPIPE × BROWSER VISION</span></footer>
+  </main>
+  <script>
+    // Explain module loading failures even when app.js never runs.
+    function appLoadFailed() {
+      document.getElementById('status').textContent = location.protocol === 'file:'
+        ? '請先執行 uv run uvicorn main:app --reload，再用瀏覽器開啟 http://localhost:8000；請勿直接開啟 HTML 檔案。'
+        : '操作程式載入失敗。請用 Chrome 或 Edge 開啟 http://localhost:8000，並按 Ctrl+Shift+R 重新載入。';
+    }
+    document.getElementById('startCamera').onclick = appLoadFailed;
+    setTimeout(function () { if (!window.gestureAppReady) appLoadFailed(); }, 8000);
+  </script>
+  <script type="module" src="/static/app.js?v=8" onerror="appLoadFailed()"></script>
+</body>
+</html>
